@@ -8,8 +8,8 @@ from tqdm import tqdm
 
 def make_docs(data: List[Tuple[str, str]], target_file: str, cats: Set[str]):
     docs = DocBin()
-    # Use nlp.pipe to efficiently process a large number of text inputs, 
-    # the as_tuple arguments enables giving a list of tuples as input and 
+    # Use nlp.pipe to efficiently process a large number of text inputs,
+    # the as_tuple arguments enables giving a list of tuples as input and
     # reuse it in the loop, here for the labels
     for doc, label in tqdm(nlp.pipe(data, as_tuples=True, disable=['tagger', 'parser', 'attribute_ruler', 'lemmatizer']), total=len(data)):
         # Encode the labels (assign 1 to the label)
@@ -21,16 +21,16 @@ def make_docs(data: List[Tuple[str, str]], target_file: str, cats: Set[str]):
 
 def make_docs_01(data):
     docs = []
-    
+
     for doc, label in tqdm(nlp.pipe(data, as_tuples=True), total = len(data)):
         for cat in cats:
             doc.cats[cat] = 1 if cat == label else 0
         docs.append(doc)
     return docs
 
-df = pd.read_json('/Users/kspicer/Desktop/spacy_textcat/training_dataframe.json', orient='records', encoding='utf-8')
-#print(df.head())
-df['text'] = df['cleaned_text'].replace(r'\n',' ', regex=True)
+df = pd.read_json('training_json_file.json', orient='records', encoding='utf-8')
+print(df.head())
+df['text'] = df['cleaned_html'].replace(r'\n',' ', regex=True)
 df['label'] = df['label'].astype('str')
 resampled_df = df.groupby('label').apply(lambda x: x.sample(135)).reset_index(drop=True)
 #print(resampled_df.head())
@@ -42,6 +42,7 @@ print(cats)
 
 X_train, X_valid, y_train, y_valid = train_test_split(resampled_df["text"].values, resampled_df["label"].values, test_size=0.3)
 
-tqdm(make_docs(list(zip(X_train, y_train)), "/Users/kspicer/Desktop/spacy_textcat/train.spacy", cats=cats))
-tqdm(make_docs(list(zip(X_valid, y_valid)), "/Users/kspicer/Desktop/spacy_textcat/valid.spacy", cats=cats))
+tqdm(make_docs(list(zip(X_train, y_train)), "train.spacy", cats=cats))
+tqdm(make_docs(list(zip(X_valid, y_valid)), "valid.spacy", cats=cats))
 print("Finished making all the docs!")
+
