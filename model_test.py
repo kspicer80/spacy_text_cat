@@ -8,3 +8,4 @@ opinion_of_text = test_text['html_lawbox']
 print(opinion_of_text)
 
 spacy_doc = nlp(opinion_of_text)
+print
