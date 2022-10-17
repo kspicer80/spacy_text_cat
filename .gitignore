@@ -2,3 +2,4 @@
 training_dataframe.json
 cleaned_dataframe.jsonl
 training_json_file.json
+.DS_Store
