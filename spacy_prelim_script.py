@@ -32,17 +32,17 @@ df = pd.read_json('training_json_file.json', orient='records', encoding='utf-8')
 print(df.head())
 df['text'] = df['cleaned_html'].replace(r'\n',' ', regex=True)
 df['label'] = df['label'].astype('str')
-resampled_df = df.groupby('label').apply(lambda x: x.sample(135)).reset_index(drop=True)
+resampled_df = df.groupby('label').apply(lambda x: x.sample(1000)).reset_index(drop=True)
 #print(resampled_df.head())
 #print(resampled_df['label'].value_counts())
 
-cats = resampled_df.label.unique().tolist()
+cats = df.label.unique().tolist()
 print(cats)
 
 
-X_train, X_valid, y_train, y_valid = train_test_split(resampled_df["text"].values, resampled_df["label"].values, test_size=0.3)
+X_train, X_valid, y_train, y_valid = train_test_split(df["text"].values, df["label"].values, test_size=0.2)
 
-tqdm(make_docs(list(zip(X_train, y_train)), "train.spacy", cats=cats))
-tqdm(make_docs(list(zip(X_valid, y_valid)), "valid.spacy", cats=cats))
+tqdm(make_docs(list(zip(X_train, y_train)), "train_full.spacy", cats=cats))
+tqdm(make_docs(list(zip(X_valid, y_valid)), "valid_full.spacy", cats=cats))
 print("Finished making all the docs!")
 
