@@ -32,7 +32,7 @@ df = pd.read_json('training_json_file.json', orient='records', encoding='utf-8')
 print(df.head())
 df['text'] = df['cleaned_html'].replace(r'\n',' ', regex=True)
 df['label'] = df['label'].astype('str')
-resampled_df = df.groupby('label').apply(lambda x: x.sample(1000)).reset_index(drop=True)
+resampled_df = df.groupby('label').apply(lambda x: x.sample(135)).reset_index(drop=True)
 #print(resampled_df.head())
 #print(resampled_df['label'].value_counts())
 
