@@ -41,9 +41,9 @@ df_1800s = df.loc[df['label'] == 1800]
 df_1900s = df.loc[df['label'] == 1900]
 df_2000s = df.loc[df['label'] == 2000]
 
-df_1800s_sampled = df_1800s.sample(1000)
-df_1900s_sampled = df_1900s.sample(1000)
-df_2000s_sampled = df_2000s.sample(1000)
+df_1800s_sampled = df_1800s.sample(2500)
+df_1900s_sampled = df_1900s.sample(2500)
+df_2000s_sampled = df_2000s.sample(2500)
 
 combined_df = pd.concat([df_1700s, df_1800s_sampled, df_1900s_sampled, df_2000s_sampled])
 
@@ -56,7 +56,7 @@ cats = combined_df.label.unique().tolist()
 
 X_train, X_valid, y_train, y_valid = train_test_split(combined_df["text"].values, combined_df["label"].values, test_size=0.2)
 
-tqdm(make_docs(list(zip(X_train, y_train)), "train_full.spacy", cats=cats))
-tqdm(make_docs(list(zip(X_valid, y_valid)), "valid_full.spacy", cats=cats))
+tqdm(make_docs(list(zip(X_train, y_train)), "train_2500.spacy", cats=cats))
+tqdm(make_docs(list(zip(X_valid, y_valid)), "valid_2500.spacy", cats=cats))
 print("Finished making all the docs!")
 
