@@ -30,17 +30,31 @@ def make_docs_01(data):
 
 df = pd.read_json('training_json_file.json', orient='records', encoding='utf-8')
 print(df.head())
-df['text'] = df['cleaned_html'].replace(r'\n',' ', regex=True)
-df['label'] = df['label'].astype('str')
-resampled_df = df.groupby('label').apply(lambda x: x.sample(135)).reset_index(drop=True)
+#df['text'] = df['cleaned_html'].replace(r'\n',' ', regex=True)
+#df['label'] = df['label'].astype('str')
+#resampled_df = df.groupby('label').apply(lambda x: x.sample(135)).reset_index(drop=True)
 #print(resampled_df.head())
 #print(resampled_df['label'].value_counts())
 
-cats = df.label.unique().tolist()
-print(cats)
+df_1700s = df.loc[df['label'] == 1700]
+df_1800s = df.loc[df['label'] == 1800]
+df_1900s = df.loc[df['label'] == 1900]
+df_2000s = df.loc[df['label'] == 2000]
 
+df_1800s_sampled = df_1800s.sample(1000)
+df_1900s_sampled = df_1900s.sample(1000)
+df_2000s_sampled = df_2000s.sample(1000)
 
-X_train, X_valid, y_train, y_valid = train_test_split(df["text"].values, df["label"].values, test_size=0.2)
+combined_df = pd.concat([df_1700s, df_1800s_sampled, df_1900s_sampled, df_2000s_sampled])
+
+combined_df['text'] = combined_df['cleaned_html'].replace(r'\n',' ', regex=True)
+combined_df['label'] = combined_df['label'].astype('str')
+
+cats = combined_df.label.unique().tolist()
+#cats = df.label.unique().tolist()
+#print(cats)
+
+X_train, X_valid, y_train, y_valid = train_test_split(combined_df["text"].values, combined_df["label"].values, test_size=0.2)
 
 tqdm(make_docs(list(zip(X_train, y_train)), "train_full.spacy", cats=cats))
 tqdm(make_docs(list(zip(X_valid, y_valid)), "valid_full.spacy", cats=cats))

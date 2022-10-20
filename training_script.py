@@ -9,7 +9,7 @@ spacy_train(
     config_path,
     output_path=output_model_path,
     overrides={
-        "paths.train": "train.spacy",
-        "paths.dev": "valid.spacy",
+        "paths.train": "train_full.spacy",
+        "paths.dev": "valid_full.spacy",
     },
 )
